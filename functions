@@ -80,18 +80,9 @@ function note () {
     local id=$date
     local filename="$notes_dir$slug.md"
     echo "Creating $filename"
-    cat << DELIMIT > "$filename"
----
-id: $id
-date: $(date +'%B %d, %Y')
-tags:
----
-
-# $title
-
-DELIMIT
-
-open "$filename"
+    #echo -e "$(cat $_snippets/template_sermon.txt)" > "$file_name"
+    sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $_snippets/template_note.md > $filename
+    open "$filename"
 
 }
 
