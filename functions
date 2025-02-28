@@ -1,0 +1,412 @@
+#!/bin/bash
+
+notes_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes/"
+drafts_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/drafts/"
+workspaces_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/workspaces/"
+
+function clean-name () {
+    local target="${1}"
+
+    ## remove non-alphanumeric
+    target=$(echo "$target" | tr -cd '[:alnum:]- ')
+
+    ## replace dash with space
+    target=$(echo "$target" | tr '-' ' ')
+
+    ## Normalize whitespace
+    target=$(echo "$target" | tr -s ' ')
+
+    ## replace whitespace with dash
+    target=$(echo "$target" | tr ' ' "-")
+
+    ## normalize dashes
+    target=$(echo "$target" | tr -s '-')
+
+    echo $target
+}
+
+function slugify {
+    local target="${1}"
+
+    ## clean
+    target=$(clean-name "$target")
+
+    ## convert to lower
+    target=$(echo "$target" | tr '[:upper:]' '[:lower:]')
+
+    echo $target
+}
+
+function _title_case {
+    local input="${1}"
+    local output=$(echo "$input" | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))}1')
+    echo $output
+}
+
+function _dir-name () {
+    local target="${1}"
+
+    ## remove non-alphanumeric
+    target=$(echo "$target" | tr -cd '[:alnum:]-: ')
+    ## replace colon with underscore
+    target=$(echo "$target" | tr ':' '_')
+    ## replace dash with underscore
+    target=$(echo "$target" | tr '-' '_')
+    ## convert to title case
+    target=$(_title_case "$target")
+    ## replace whitespace with underscore
+    target=$(echo "$target" | tr ' ' "_")
+
+    echo $target
+}
+
+# create a new workspace dir
+function workspace {
+    local dir_suffix=$(_dir-name "${1}")
+    local date=$(date +"%Y%m%d")
+    local dir_name="${date}_${dir_suffix}"
+    local workspace_dir="${workspaces_dir}${dir_name}"
+
+    mkdir "$workspace_dir"
+    echo $workspace_dir
+}
+
+# Create a new general note
+function note () {
+    local title="${1}"
+    local clean=$(slugify "$@")
+    local date=$(date +"%Y%m%d%H%M")
+    local slug="$date-$clean"
+    local id=$date
+    local filename="$notes_dir$slug.md"
+    echo "Creating $filename"
+    cat << DELIMIT > "$filename"
+---
+id: $id
+date: $(date +'%B %d, %Y')
+tags:
+---
+
+# $title
+
+DELIMIT
+
+open "$filename"
+
+}
+
+# Create a draft newsletter
+function newsletter () {
+    local workspace_dir=$(workspace "Weary Pilgrim ${1}")
+    local sections_dir="${workspace_dir}/Sections"
+    mkdir -p $sections_dir
+    echo -e "## Article\n" > "${sections_dir}Article.md"
+    echo -e "## Prayer\n" > "${sections_dir}Prayer.md"
+    echo -e "## Through My Lens\n" > "${sections_dir}Photo.md"
+    echo -e "## What I'm Reading\n" > "${sections_dir}Reading.md"
+    echo -e "## Art\n" > "${sections_dir}Art.md"
+    echo -e "## From My Commonplace Book\n" > "${sections_dir}Commonplace.md"
+    echo -e "## Poetry\n" > "${sections_dir}Poetry.md"
+    echo -e "## Closing Quote\n" > "${sections_dir}ClosingQuote.md"
+
+    local file_name="${workspace_dir}Draft-01.md"
+    echo "Creating $file_name"
+    cat << DELIMIT > "$file_name"
+
+# The Weary Pilgrim Newsletter – ${1}
+
+https://cdn.ryanlwentzel.com/assets/img/content/leader-haymakers-1880-md.webp 
+
+---
+
+*Hello, fellow pilgrims. Welcome to this month's issue.*
+
+---
+
+Sections/Article.md
+
+---
+
+Sections/Prayer.md
+
+---
+
+Sections/Photo.md
+
+---
+
+Sections/Reading.md
+
+---
+
+Sections/Art.md
+
+---
+
+Sections/Commonplace.md
+
+---
+
+Sections/Poetry.md
+
+---
+
+Sections/ClosingQuote.md
+
+DELIMIT
+
+open "$file_name"
+
+}
+
+# Create new exegesis note
+function nex () {
+    local title="${1}"
+    local clean=$(slugify "$@")
+    local date=$(date +"%Y%m%d%H%M")
+    local slug="$date-$clean"
+    local id=$date
+    local dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes/"
+    local filename="$dir$slug.md"
+    echo "Creating $filename"
+    cat << DELIMIT > "$filename"
+---
+id: $id
+date: $(date +'%B %d, %Y')
+tags: 
+ - #exegeticalnotes
+---
+
+# $title
+
+## Text Big Idea
+
+## Literary Context
+
+## Structure
+
+## Exegetical Outline
+
+## Comments
+
+## HCF
+
+## RS
+
+## VF
+
+## Sermon Big Idea
+
+## So what? Why does this matter?
+
+## Now what? What should I do in response?
+
+## How would my life, our church, our community, our world look different if we embraced this truth?
+
+DELIMIT
+
+open "$filename"
+
+}
+
+# Create a new sermon workspace
+function sermon {
+    local workspace_dir=$(workspace "Sermon ${1}")
+    local file_name="${workspace_dir}/Draft-01.md"
+    echo "Creating $file_name"
+    echo -e "$(cat $_snippets/template_sermon.txt)" > "$file_name"
+
+open "$file_name"
+
+}
+
+function affinity () {
+    open "${1}" -a /Applications/Affinity\ Photo.app/
+}
+
+# usage: convert-webp-854 input.jpg output.webp 70
+function convert-webp-854 () {
+    local quality=${3:-60}
+    magick "${1}" -resize 854x480^ -gravity center -extent 854x480 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"
+}
+
+function convert-webp-1280 () {
+    local quality=${3:-60}
+    magick "${1}" -resize 1280x720^ -gravity center -extent 1280x720 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"
+}
+
+function convert-webp-1536 () {
+    local quality=${3:-60}
+    magick "${1}" -resize 1536x864^ -gravity center -extent 1536x864 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"
+}
+
+function convert-webp-1920 () {
+    local quality=${3:-60}
+    magick "${1}" -resize 1920x1080^ -gravity center -extent 1920x1080 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"
+}
+
+function convert-webp-2560 () {
+    local quality=${3:-60}
+    magick "${1}" -resize 2560x1440^ -gravity center -extent 2560x1440 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"  
+}
+
+function img-grow () {
+    local size=${2}
+    local quality=${3:-90}
+    local name=${1%.*}
+    local output_name="$name-lg.jpg"
+
+    magick "${1}" -resize "$size^" -gravity center -extent $size^ -quality $quality $output_name
+}
+
+function webp () {
+    local name=${1%.*}
+    local output=$name.webp
+    local quality=${2:-100}
+
+    magick "${1}" -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality $output
+}
+
+function newsletter-img () {
+    local quality=${2:-70}
+    local name=${1%.*}
+    local output_name="$name-newsletter.webp"
+    local dist_dir="dist"
+
+    mkdir -p $dist_dir
+    convert-webp-1280 "${1}" "$dist_dir/$output_name" $quality
+    echo "created: $dist_dir/$output_name"
+}
+
+function rwimg () {
+    local base_name=$(basename ${1})
+    local quality=${2:-70}
+    local name=${base_name%.*}
+    local sm="$name-sm.webp"
+    local md="$name-md.webp"
+    local lg="$name-lg.webp"
+    local dist_dir="dist"
+
+    mkdir -p $dist_dir
+    convert-webp-854 "${1}" "$dist_dir/$sm" $quality
+    convert-webp-1280 "${1}" "$dist_dir/$md" $quality
+    convert-webp-2560 "${1}" "$dist_dir/$lg" $quality
+
+    echo "sm: $dist_dir/$sm"
+    echo "md: $dist_dir/$md"
+    echo "lg: $dist_dir/$lg"
+}
+
+function rwimages {
+    local dir="${1:-.}"  # Default to current directory if no argument is provided
+    for file in "$dir"/*; do
+        if [[ -f "$file" ]]; then
+            echo "processing $file"
+            rwimg $file
+            echo "--------------------------------"
+        fi
+    done
+}
+
+function rwphoto-l () {
+    local base_name=$(basename ${1})
+    local quality=${2:-85}
+    local name=${base_name%.*}
+    local full="$name.webp"
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+
+    local output_full="$dist_dir/$full"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+
+    echo "creating ${output_full}"
+    magick "${1}" -resize "2160x1440>" -quality $quality "$output_full"
+
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality 95 "$output_thumb"
+}
+
+function rwphoto-p () {
+    local base_name=$(basename ${1})
+    local quality=${2:-85}
+    local name=${base_name%.*}
+    local full="$name.webp"
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+
+    local output_full="$dist_dir/$full"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+
+    echo "creating ${output_full}"
+    magick "${1}" -resize "648x972>" -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "$output_full"
+
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality 85 "$output_thumb"
+}
+
+function rwphoto-sq () {
+    local base_name=$(basename ${1})
+    local name=${base_name%.*}
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+
+    local output_full="$dist_dir/$base_name"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+
+    echo "creating ${output_full}"
+    magick "${1}" -resize "600x600" -quality 85 "$output_full"
+
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 500x500^ -gravity center -extent 500x500 -define :webp:lossless=false -define :webp:image-hint=photo -quality 90 "$output_thumb"
+}
+
+function sq-1000 () {
+    local base_name=$(basename ${1})
+    local quality=${2:-85}
+    local name=${base_name%.*}
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality $quality "$output_thumb"
+
+}
+
+function square-thumb () {
+    local name=${1%.jpg}
+    local thumb="$name-thumb.webp"
+
+    magick "${1}" -resize 500x500^ -gravity center -extent 500x500 -define :webp:lossless=false -define :webp:image-hint=photo -quality 85 "$thumb"
+ 
+}
+
+function s3-cp-img () {
+    local filePath="${1}"
+    local destDir="s3://static.ryanlwentzel.com/assets/img/${2:-content}/"
+
+    echo "uploading '${filePath}' to '${destDir}'"
+
+    aws s3 cp $filePath $destDir
+}
+
+function s3-cp-images () {
+    local source_dir="${1:-dist/}"
+    local bucket="s3://static.ryanlwentzel.com/assets/img/content/" 
+
+    aws s3 cp $source_dir $bucket --recursive --exclude "*" --include "*.jpg" --include "*.webp" --include "*.png"
+}
+
+function s3-cp-photos () {
+    local source_dir="${1:-dist/}"
+    local bucket="s3://static.ryanlwentzel.com/assets/img/photos/"
+
+    aws s3 cp $source_dir $bucket --recursive --exclude "*" --include "*.jpg" --include "*.webp"
+}
