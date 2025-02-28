@@ -200,12 +200,16 @@ open "$filename"
 
 }
 
+function _id () {
+    echo $(date +"%Y%m%d%H%M")
+}
+
 # Create a new sermon workspace
 function sermon {
     local workspace_dir=$(workspace "Sermon ${1}")
     local file_name="${workspace_dir}/Draft-01.md"
     echo "Creating $file_name"
-    echo -e "$(cat $_snippets/template_sermon.txt)" > "$file_name"
+    sed -e "s/\$id/$(_id)/" -e "s/\$date/$(date +'%B %d, %Y')/" $_snippets/template_sermon.md > $file_name
 
 open "$file_name"
 

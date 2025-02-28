@@ -1,9 +1,9 @@
 ---
-id: 
-title: "Sermon Title"
-text: "Scripture Passage"
-date: January 5, 2025
-venue: "GBC Escondido"
+id: $id
+date: $date
+title: $title
+text: Passage
+venue: GBC Escondido
 tags:
 	- #bookofsamuel
 	- #sermon
