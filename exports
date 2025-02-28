@@ -1,2 +1,2 @@
-export _dotfiles="$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles/"
-export _snippets="$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles/snippets/"
+export _dotfiles="$HOME/dev/dotfiles/"
+export _snippets="$HOME/dev/dotfiles/snippets/"
