@@ -1,5 +1,5 @@
 export _dotfiles="$HOME/dev/dotfiles/"
-export _snippets="$HOME/dev/dotfiles/snippets/"
+export _templates="$HOME/dev/dotfiles/templates/"
 export ia_writer_docs_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents"
 export dirnotes="$ia_writer_docs_dir/notes"
 export dirworkspaces="$ia_writer_docs_dir/workspaces"

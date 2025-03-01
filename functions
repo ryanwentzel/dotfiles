@@ -32,7 +32,7 @@ function workspace {
     local dir_suffix=$(slugify "${1}")
     local date=$(date +"%Y%m%d")
     local dir_name="${date}-${dir_suffix}"
-    local workspace_dir="${dirworkspaces}${dir_name}"
+    local workspace_dir="${dirworkspaces}/${dir_name}"
 
     mkdir "$workspace_dir"
     echo $workspace_dir
@@ -45,10 +45,9 @@ function note () {
     local date=$(date +"%Y%m%d%H%M")
     local slug="$date-$clean"
     local id=$date
-    local filename="$dirnotes$slug.md"
+    local filename="$dirnotes/$slug.md"
     echo "Creating $filename"
-    #echo -e "$(cat $_snippets/template_sermon.txt)" > "$file_name"
-    sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $_snippets/template_note.md > $filename
+    sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $_templates/note.md > $filename
     open "$filename"
 
 }
@@ -59,12 +58,12 @@ function newsletter () {
     local workspace_dir=$(workspace "Weary Pilgrim ${title}")
     local sections_dir="${workspace_dir}/sections"
     mkdir -p $sections_dir
-    for file in "$_snippets/newsletter/sections/"*; do
+    for file in "$_templates/newsletter/sections/"*; do
         cp $file $sections_dir
     done
     local filename="${workspace_dir}/draft-01.md"
     echo "Creating $filename"
-    sed -e "s/\$title/${1}/" "$_snippets/newsletter/template-newsletter.md" > $filename
+    sed -e "s/\$title/${1}/" "$_templates/newsletter/newsletter.md" > $filename
     open "$filename"
 }
 
@@ -127,7 +126,7 @@ function sermon {
     local workspace_dir=$(workspace "Sermon ${1}")
     local file_name="${workspace_dir}/draft-01.md"
     echo "Creating $file_name"
-    sed -e "s/\$id/$(_id)/" -e "s/\$date/$(date +'%B %d, %Y')/" $_snippets/template_sermon.md > $file_name
+    sed -e "s/\$id/$(_id)/" -e "s/\$date/$(date +'%B %d, %Y')/" $_templates/sermon.md > $file_name
 
 open "$file_name"
 
