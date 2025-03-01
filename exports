@@ -1,2 +1,5 @@
 export _dotfiles="$HOME/dev/dotfiles/"
 export _snippets="$HOME/dev/dotfiles/snippets/"
+export dirnotes="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes/"
+export dirworkspaces="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/workspaces/"
+export dirdrafts="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/drafts/"

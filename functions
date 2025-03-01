@@ -1,9 +1,5 @@
 #!/bin/bash
 
-notes_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes/"
-drafts_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/drafts/"
-workspaces_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/workspaces/"
-
 function slugify {
     local target="${1}"
 
@@ -36,7 +32,7 @@ function workspace {
     local dir_suffix=$(slugify "${1}")
     local date=$(date +"%Y%m%d")
     local dir_name="${date}-${dir_suffix}"
-    local workspace_dir="${workspaces_dir}${dir_name}"
+    local workspace_dir="${dirworkspaces}${dir_name}"
 
     mkdir "$workspace_dir"
     echo $workspace_dir
@@ -49,7 +45,7 @@ function note () {
     local date=$(date +"%Y%m%d%H%M")
     local slug="$date-$clean"
     local id=$date
-    local filename="$notes_dir$slug.md"
+    local filename="$dirnotes$slug.md"
     echo "Creating $filename"
     #echo -e "$(cat $_snippets/template_sermon.txt)" > "$file_name"
     sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $_snippets/template_note.md > $filename
