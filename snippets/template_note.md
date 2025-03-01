@@ -1,7 +1,7 @@
 ---
 id: $id
 date: $date
-title: "$title"
+title: $title
 tags:
 ---
 # [%title]
