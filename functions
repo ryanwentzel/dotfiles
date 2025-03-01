@@ -88,66 +88,17 @@ function note () {
 
 # Create a draft newsletter
 function newsletter () {
-    local workspace_dir=$(workspace "Weary Pilgrim ${1}")
-    local sections_dir="${workspace_dir}/Sections"
+    local title=${1}
+    local workspace_dir=$(workspace "Weary Pilgrim ${title}")
+    local sections_dir="${workspace_dir}/sections"
     mkdir -p $sections_dir
-    echo -e "## Article\n" > "${sections_dir}Article.md"
-    echo -e "## Prayer\n" > "${sections_dir}Prayer.md"
-    echo -e "## Through My Lens\n" > "${sections_dir}Photo.md"
-    echo -e "## What I'm Reading\n" > "${sections_dir}Reading.md"
-    echo -e "## Art\n" > "${sections_dir}Art.md"
-    echo -e "## From My Commonplace Book\n" > "${sections_dir}Commonplace.md"
-    echo -e "## Poetry\n" > "${sections_dir}Poetry.md"
-    echo -e "## Closing Quote\n" > "${sections_dir}ClosingQuote.md"
-
-    local file_name="${workspace_dir}Draft-01.md"
-    echo "Creating $file_name"
-    cat << DELIMIT > "$file_name"
-
-# The Weary Pilgrim Newsletter – ${1}
-
-https://cdn.ryanlwentzel.com/assets/img/content/leader-haymakers-1880-md.webp 
-
----
-
-*Hello, fellow pilgrims. Welcome to this month's issue.*
-
----
-
-Sections/Article.md
-
----
-
-Sections/Prayer.md
-
----
-
-Sections/Photo.md
-
----
-
-Sections/Reading.md
-
----
-
-Sections/Art.md
-
----
-
-Sections/Commonplace.md
-
----
-
-Sections/Poetry.md
-
----
-
-Sections/ClosingQuote.md
-
-DELIMIT
-
-open "$file_name"
-
+    for file in "$_snippets/newsletter/sections/"*; do
+        cp $file $sections_dir
+    done
+    local filename="${workspace_dir}/draft-01.md"
+    echo "Creating $filename"
+    sed -e "s/\$title/${1}/" "$_snippets/newsletter/template-newsletter.md" > $filename
+    open "$filename"
 }
 
 # Create new exegesis note
