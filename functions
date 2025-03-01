@@ -4,30 +4,9 @@ notes_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes/
 drafts_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/drafts/"
 workspaces_dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/workspaces/"
 
-function clean-name () {
-    local target="${1}"
-
-    ## remove non-alphanumeric
-    target=$(echo "$target" | tr -cd '[:alnum:]- ')
-
-    ## replace dash with space
-    target=$(echo "$target" | tr '-' ' ')
-
-    ## Normalize whitespace
-    target=$(echo "$target" | tr -s ' ')
-
-    ## replace whitespace with dash
-    target=$(echo "$target" | tr ' ' "-")
-
-    ## normalize dashes
-    target=$(echo "$target" | tr -s '-')
-
-    echo $target
-}
-
 function slugify {
     local target="${1}"
-    
+
     ## remove non-alphanumeric
     target=$(echo "$target" | tr -cd '[:alnum:]- ')
 
