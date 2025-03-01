@@ -321,3 +321,23 @@ function s3-cp-photos () {
 
     aws s3 cp $source_dir $bucket --recursive --exclude "*" --include "*.jpg" --include "*.webp"
 }
+
+function arch-workspace () {
+    local workspace_dir="${1}"
+    local archive_name=${2:-$(basename $workspace_dir).zip}
+    local archive_dir="${dirworkspaces}/z_archive/"
+    local archive_full_path="${archive_dir}/${archive_name}"
+    echo "Archiving $workspace_dir to $archive_full_path"
+    mkdir -p "$archive_dir"
+    zip -r $archive_full_path $workspace_dir
+}
+
+function zip-dirs () {
+    for dir in ./*; do
+        if [[ -d "$dir" ]]; then
+            archive_name=$(basename $dir).zip
+            echo "Archiving $(basename $dir) to $archive_name"
+            zip -r $archive_name $dir
+        fi
+    done
+}
