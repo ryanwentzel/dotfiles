@@ -5,6 +5,12 @@
 
 # Rename a `target` file to `target.backup` if the file
 # exists and if it's a 'real' file, ie not a symlink
+
+set -e
+
+cd "$(dirname "$0")/.."
+DOTFILES_ROOT=$(pwd -P)
+
 function backup () {
   target=$1
   if [ -e "$target" ]; then
@@ -25,9 +31,9 @@ function symlink () {
 }
 
 # For all files, backup the target file located at `~/.$file` and symlink `$file` to `~/.$file`
-for file in {zshrc,gitignore}; do
+for file in "$DOTFILES_ROOT/"{zshrc,gitignore}; do
   if [ -f "$file" ]; then
-    target="$HOME/.$file"
+    target="$HOME/.$(basename $file)"
     # Backup the target file if it exists
     if [ -e "$target" ] && [ -f "$target" ]; then
       backup $target

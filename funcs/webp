@@ -1,6 +1,6 @@
 #!/bin/sh
 
-function webp () {
+function rwebp () {
     local input=$1
     if [ -z "$input" ]; then
         echo "Usage: webp <input> [<quality>]"
@@ -33,6 +33,11 @@ function convert-webp-1536 () {
 function convert-webp-1920 () {
     local quality=${3:-60}
     magick "${1}" -resize 1920x1080^ -gravity center -extent 1920x1080 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"
+}
+
+function webp-lg () {
+    local quality=${3:-60}
+    magick "${1}" -resize 2560x1440^ -gravity center -extent 2560x1440 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"  
 }
 
 function convert-webp-2560 () {

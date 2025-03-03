@@ -39,6 +39,14 @@ function rwimg () {
     echo "lg: $dist_dir/$lg"
 }
 
+function _create-lg () {
+    local input=$1
+    local outout=$2
+    local quality=${3:-70}
+
+    convert-webp-2560 $input $output $quality
+}
+
 function rwimages {
     local dir="${1:-.}"  # Default to current directory if no argument is provided
     for file in "$dir"/*; do
