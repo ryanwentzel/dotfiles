@@ -47,6 +47,11 @@ function rwebp () {
     cwebp -quiet -q $quality $input -o $output
 }
 
+# Creates 3 versions of an image: large, medium, and small
+# Steps:
+#   1. Resize image
+#   2. Optimize image
+#   3. Convert image to webp format
 function rwimg () {
     local input_file=$1
     local base_name=$(basename ${input_file})
