@@ -4,13 +4,33 @@ alias ll="ls -l"
 alias lla="ls -la"
 alias lss="ls -1"
 alias reload!=". ~/.zshrc"
-alias devsite="open -a 'Microsoft Edge' --url 'http://localhost:4000'"
-alias cddotfiles="cd '$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles'"
+
+# Shortcuts
+alias dev="cd ~/dev"
+alias dotfiles="cd '$DOTFILES'"
+alias staging="cd ~/dev/staging"
+
+# Apps
 alias byword="open -a Byword"
+alias chrome="open -a Google\ Chrome"
+alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
 alias iawriter="open -a \"IA Writer\""
 alias macdown="open -a MacDown"
+alias music="open -a Music"
+alias spark="open -a Spark\ Desktop"
 
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
+# Websites
+alias devweb="open -a 'Microsoft Edge' --url 'http://localhost:4000'"
+alias news="open https://nytimes.com https://apnews.com https://www.axios.com/"
+alias rweb="open https://ryanlwentzel.com"
+
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
 
 
