@@ -16,11 +16,15 @@ alias staging="cd ~/dev/staging"
 alias affinity="open -a Affinity\ Photo"
 alias byword="open -a Byword"
 alias chrome="open -a Google\ Chrome"
+alias edge="open -a Microsoft\ Edge"
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
 alias iawriter="open -a \"IA Writer\""
+alias imageoptim="open -a ImageOptim $@"
+alias logos="open -a Logos"
 alias macdown="open -a MacDown"
 alias music="open -a Music"
 alias publisher="open -a Affinity\ Publisher"
+alias safari="open -a Safari"
 alias spark="open -a Spark\ Desktop"
 
 # Hide/show all desktop icons (useful when presenting)
@@ -29,7 +33,10 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 
 # Websites
 alias devweb="open -a 'Microsoft Edge' --url 'http://localhost:4000'"
+alias gclass="open 'https://grcbible.sharepoint.com/:f:/s/GraceBibleChurch/Eud9BRpcCO5Li6DmAgvf5e8BkfS-WDHdzx77eRDjf6e4aQ?e=tJlQ3h'"
+alias goff="open 'https://grcbible.sharepoint.com/:f:/s/GraceBibleChurch/EsUZdLIisBhCtz_jzP5RoPsBYZxnO49M_zz-k5FhnWZarg?e=ydqexr'"
 alias news="open https://nytimes.com https://apnews.com https://www.axios.com/"
+alias pcserv="open https://services.planningcenteronline.com/dashboard/0"
 alias rweb="open https://ryanlwentzel.com"
 
 # Show/hide hidden files in Finder
