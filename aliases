@@ -7,16 +7,20 @@ alias reload!=". ~/.zshrc"
 
 # Shortcuts
 alias dev="cd ~/dev"
+alias dl="cd ~/Downloads"
 alias dotfiles="cd '$DOTFILES'"
+alias dt="cd ~/Desktop"
 alias staging="cd ~/dev/staging"
 
 # Apps
+alias affinity="open -a Affinity\ Photo"
 alias byword="open -a Byword"
 alias chrome="open -a Google\ Chrome"
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
 alias iawriter="open -a \"IA Writer\""
 alias macdown="open -a MacDown"
 alias music="open -a Music"
+alias publisher="open -a Affinity\ Publisher"
 alias spark="open -a Spark\ Desktop"
 
 # Hide/show all desktop icons (useful when presenting)
@@ -27,6 +31,10 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 alias devweb="open -a 'Microsoft Edge' --url 'http://localhost:4000'"
 alias news="open https://nytimes.com https://apnews.com https://www.axios.com/"
 alias rweb="open https://ryanlwentzel.com"
+
+# Show/hide hidden files in Finder
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
 
 # Hide/show all desktop icons (useful when presenting)
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
