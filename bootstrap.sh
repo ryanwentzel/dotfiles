@@ -26,9 +26,12 @@ function symlink () {
 
 # For all files, backup the target file located at `~/.$file` and symlink `$file` to `~/.$file`
 for file in {zshrc,gitignore}; do
-  if [ -r "$file" ] && [ -f "$file" ]; then
+  if [ -f "$file" ]; then
     target="$HOME/.$file"
-    backup $target
+    # Backup the target file if it exists
+    if [ -e "$target" ] && [ -f "$target" ]; then
+      backup $target
+    fi
     symlink $PWD/$file $target
   fi
 done
