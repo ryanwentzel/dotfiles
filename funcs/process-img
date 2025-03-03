@@ -1,5 +1,17 @@
 #!/bin/sh
 
+local LG_SIZE="2560x1440"
+local MD_SIZE="1280x720"
+local SM_SIZE="854x480"
+
+function rwimg-resize () {
+    local input=$1
+    local output=$2
+    local size=$3
+    local quality=${4:-100}
+    magick "${input}" -resize "$size^" -gravity center -extent $size^ -quality $quality $output
+}
+
 function img-grow () {
     local size=${2}
     local quality=${3:-90}
@@ -35,33 +47,6 @@ function rwebp () {
     cwebp -quiet -q $quality $input -o $output
 }
 
-function rwimg-llg () {
-    local input_file=$1
-    local output_file=$2
-    local quality=${3:-100}
-    local name=${1%.*}
-
-    magick "${input_file}" -resize 2560x1440^ -gravity center -extent 2560x1440 -quality ${quality} "${output_file}"  
-}
-
-function rwimg-lmd () {
-    local input_file=$1
-    local output_file=$2
-    local quality=${3:-100}
-    local name=${1%.*}
-
-    magick "${input_file}" -resize 1280x720^ -gravity center -extent 1280x720 -quality ${quality} "${output_file}"
-}
-
-function rwimg-lsm () {
-    local input_file=$1
-    local output_file=$2
-    local quality=${3:-100}
-    local name=${1%.*}
-
-    magick "${input_file}" -resize 854x480^ -gravity center -extent 854x480 -quality ${quality} "${output_file}"
-}
-
 function rwimg () {
     local input_file=$1
     local base_name=$(basename ${input_file})
@@ -73,21 +58,24 @@ function rwimg () {
     # Create large image
     local tmp="$dist_dir/$name-lg.tmp"
     local lg="$dist_dir/$name-lg.webp"
-    rwimg-llg "${input_file}" "${tmp}"
+    rwimg-resize $input_file $tmp $LG_SIZE
+    imgopt "${tmp}"
     rwebp "${tmp}" 75 "${lg}"
     rm "${tmp}"
 
     # Create medium image
     local md="$dist_dir/$name-md.webp"
     tmp="$dist_dir/$name-md.tmp"
-    rwimg-lmd "${input_file}" "${tmp}"
+    rwimg-resize $input_file $tmp $MD_SIZE
+    imgopt "${tmp}"
     rwebp "${tmp}" 80 "${md}"
     rm "${tmp}"
 
     # Create small image
     local sm="$dist_dir/$name-sm.webp"
     tmp="$dist_dir/$name-sm.tmp"
-    rwimg-lsm "${input_file}" "${tmp}"
+    rwimg-resize $input_file $tmp $SM_SIZE
+    imgopt "${tmp}"
     rwebp "${tmp}" 85 "${sm}"
     rm "${tmp}"
 
