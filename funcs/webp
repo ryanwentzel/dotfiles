@@ -1,19 +1,5 @@
 #!/bin/sh
 
-function rwebp () {
-    local input=$1
-    if [ -z "$input" ]; then
-        echo "Usage: webp <input> [<quality>]"
-        return 1
-    fi
-
-    local name=${1%.*}
-    local output=$name.webp
-    local quality=${2:-100}
-
-    magick "${1}" -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality $output
-}
-
 # usage: convert-webp-854 input.jpg output.webp 70
 function convert-webp-854 () {
     local quality=${3:-60}
@@ -41,6 +27,6 @@ function webp-lg () {
 }
 
 function convert-webp-2560 () {
-    local quality=${3:-60}
+    local quality=${3:-75}
     magick "${1}" -resize 2560x1440^ -gravity center -extent 2560x1440 -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "${2}"  
 }

@@ -20,31 +20,80 @@ function newsletter-img () {
     echo "created: $dist_dir/$output_name"
 }
 
+# Convert an image to webp format
+function rwebp () {
+    local input=$1
+    if [ -z "$input" ]; then
+        echo "Usage: rwebp <input> [<quality>]"
+        return 1
+    fi
+
+    local name=${1%.*}
+    local quality=${2:-75}
+    local output=${3:-name.webp}
+
+    cwebp -quiet -q $quality $input -o $output
+}
+
+function rwimg-llg () {
+    local input_file=$1
+    local output_file=$2
+    local quality=${3:-100}
+    local name=${1%.*}
+
+    magick "${input_file}" -resize 2560x1440^ -gravity center -extent 2560x1440 -quality ${quality} "${output_file}"  
+}
+
+function rwimg-lmd () {
+    local input_file=$1
+    local output_file=$2
+    local quality=${3:-100}
+    local name=${1%.*}
+
+    magick "${input_file}" -resize 1280x720^ -gravity center -extent 1280x720 -quality ${quality} "${output_file}"
+}
+
+function rwimg-lsm () {
+    local input_file=$1
+    local output_file=$2
+    local quality=${3:-100}
+    local name=${1%.*}
+
+    magick "${input_file}" -resize 854x480^ -gravity center -extent 854x480 -quality ${quality} "${output_file}"
+}
+
 function rwimg () {
-    local base_name=$(basename ${1})
-    local quality=${2:-70}
+    local input_file=$1
+    local base_name=$(basename ${input_file})
     local name=${base_name%.*}
-    local sm="$name-sm.webp"
-    local md="$name-md.webp"
-    local lg="$name-lg.webp"
     local dist_dir="dist"
 
     mkdir -p $dist_dir
-    convert-webp-854 "${1}" "$dist_dir/$sm" $quality
-    convert-webp-1280 "${1}" "$dist_dir/$md" $quality
-    convert-webp-2560 "${1}" "$dist_dir/$lg" $quality
 
-    echo "sm: $dist_dir/$sm"
-    echo "md: $dist_dir/$md"
-    echo "lg: $dist_dir/$lg"
-}
+    # Create large image
+    local tmp="$dist_dir/$name-lg.tmp"
+    local lg="$dist_dir/$name-lg.webp"
+    rwimg-llg "${input_file}" "${tmp}"
+    rwebp "${tmp}" 75 "${lg}"
+    rm "${tmp}"
 
-function _create-lg () {
-    local input=$1
-    local outout=$2
-    local quality=${3:-70}
+    # Create medium image
+    local md="$dist_dir/$name-md.webp"
+    tmp="$dist_dir/$name-md.tmp"
+    rwimg-lmd "${input_file}" "${tmp}"
+    rwebp "${tmp}" 80 "${md}"
+    rm "${tmp}"
 
-    convert-webp-2560 $input $output $quality
+    # Create small image
+    local sm="$dist_dir/$name-sm.webp"
+    tmp="$dist_dir/$name-sm.tmp"
+    rwimg-lsm "${input_file}" "${tmp}"
+    rwebp "${tmp}" 85 "${sm}"
+    rm "${tmp}"
+
+    echo "lg: ${lg}"
+    echo "md: ${md}"
+    echo "sm: ${sm}"
 }
 
 function rwimages {
