@@ -33,10 +33,10 @@ function newsletter-img () {
 }
 
 # Convert an image to webp format
-function rwebp () {
+function c2webp () {
     local input=$1
     if [ -z "$input" ]; then
-        echo "Usage: rwebp <input> [<quality>]"
+        echo "Usage: rwebp <input> <quality> [<output>]"
         return 1
     fi
 
@@ -65,7 +65,7 @@ function rwimg () {
     local lg="$dist_dir/$name-lg.webp"
     rwimg-resize $input_file $tmp $LG_SIZE
     imgopt "${tmp}"
-    rwebp "${tmp}" 75 "${lg}"
+    c2webp "${tmp}" 75 "${lg}"
     rm "${tmp}"
 
     # Create medium image
@@ -73,7 +73,7 @@ function rwimg () {
     tmp="$dist_dir/$name-md.tmp"
     rwimg-resize $input_file $tmp $MD_SIZE
     imgopt "${tmp}"
-    rwebp "${tmp}" 80 "${md}"
+    c2webp "${tmp}" 80 "${md}"
     rm "${tmp}"
 
     # Create small image
@@ -81,7 +81,7 @@ function rwimg () {
     tmp="$dist_dir/$name-sm.tmp"
     rwimg-resize $input_file $tmp $SM_SIZE
     imgopt "${tmp}"
-    rwebp "${tmp}" 85 "${sm}"
+    c2webp "${tmp}" 85 "${sm}"
     rm "${tmp}"
 
     echo "lg: ${lg}"
@@ -100,24 +100,46 @@ function rwimages {
     done
 }
 
+# Creates two versions of a photo: large and thumb
+# Steps:
+#   1. Resize image
+#   2. Optimize image
+#   3. Convert image to webp format
+# Outputs images in dist directory
 function rwphoto-l () {
-    local base_name=$(basename ${1})
+    if [ -z "$1" ]; then
+        echo "Usage: rwphoto-l <input_file> [quality]"
+        return 1
+    fi
+    if [ ! -f "$1" ]; then
+        echo "Input file not found: $1"
+        return 1
+    fi
+    
+    local input_file=$1
     local quality=${2:-85}
+    local base_name=$(basename ${input_file})
     local name=${base_name%.*}
-    local full="$name.webp"
-    local thumb="$name-thumb.webp"
     local dist_dir="dist"
-
-    local output_full="$dist_dir/$full"
-    local output_thumb="$dist_dir/$thumb"
 
     mkdir -p $dist_dir
 
-    echo "creating ${output_full}"
-    magick "${1}" -resize "2160x1440>" -quality $quality "$output_full"
+    local tmp="$dist_dir/$base_name.tmp"
+    rwimg-resize $input_file $tmp "2160x1440"
+    imgopt $tmp
+    local output_full="$dist_dir/$name.webp"
+    c2webp $tmp $quality $output_full
+    rm $tmp
 
-    echo "creating ${output_thumb}"
-    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality 95 "$output_thumb"
+    tmp="$dist_dir/$base_name-thumb.tmp"
+    rwimg-resize $input_file $tmp "1000x1000"
+    imgopt $tmp
+    local output_thumb="$dist_dir/$name-thumb.webp"
+    c2webp $tmp $quality $output_thumb
+    rm $tmp
+
+    echo "full: ${output_full}"
+    echo "thumb: ${output_thumb}"
 }
 
 function rwphoto-p () {
