@@ -1,0 +1,24 @@
+#!/bin/sh
+
+function s3-cp-img () {
+    local filePath="${1}"
+    local destDir="s3://static.ryanlwentzel.com/assets/img/${2:-content}/"
+
+    echo "uploading '${filePath}' to '${destDir}'"
+
+    aws s3 cp $filePath $destDir
+}
+
+function s3-cp-images () {
+    local source_dir="${1:-dist/}"
+    local bucket="s3://static.ryanlwentzel.com/assets/img/content/" 
+
+    aws s3 cp $source_dir $bucket --recursive --exclude "*" --include "*.jpg" --include "*.webp" --include "*.png"
+}
+
+function s3-cp-photos () {
+    local source_dir="${1:-dist/}"
+    local bucket="s3://static.ryanlwentzel.com/assets/img/photos/"
+
+    aws s3 cp $source_dir $bucket --recursive --exclude "*" --include "*.jpg" --include "*.webp"
+}

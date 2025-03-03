@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# Create new exegesis note
+function nex () {
+    local title="${1}"
+    local clean=$(slugify "$@")
+    local date=$(date +"%Y%m%d%H%M")
+    local slug="$date-$clean"
+    local id=$date
+    local dir="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes/"
+    local filename="$dir$slug.md"
+    echo "Creating $filename"
+    cat << DELIMIT > "$filename"
+---
+id: $id
+date: $(date +'%B %d, %Y')
+tags: 
+ - #exegeticalnotes
+---
+
+# $title
+
+## Text Big Idea
+
+## Literary Context
+
+## Structure
+
+## Exegetical Outline
+
+## Comments
+
+## HCF
+
+## RS
+
+## VF
+
+## Sermon Big Idea
+
+## So what? Why does this matter?
+
+## Now what? What should I do in response?
+
+## How would my life, our church, our community, our world look different if we embraced this truth?
+
+DELIMIT
+
+open "$filename"
+
+}

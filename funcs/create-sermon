@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Create a new sermon workspace
+function sermon {
+    local workspace_dir=$(workspace "Sermon ${1}")
+    local file_name="${workspace_dir}/draft-01.md"
+    echo "Creating $file_name"
+    sed -e "s/\$id/$(_id)/" -e "s/\$date/$(date +'%B %d, %Y')/" $_templates/sermon.md > $file_name
+
+    open "$file_name"
+}   

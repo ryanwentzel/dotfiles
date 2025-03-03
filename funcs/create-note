@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Create a new general note
+function note () {
+    local title="${1}"
+    local clean=$(slugify "$@")
+    local id=$(date +"%Y%m%d%H%M")
+    local slug="$id-$clean"
+    local filename="$dirnotes/$slug.md"
+    echo "Creating $filename"
+    sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $_templates/note.md > $filename
+    open "$filename"
+}

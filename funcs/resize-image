@@ -1,0 +1,131 @@
+#!/bin/sh
+
+function img-grow () {
+    local size=${2}
+    local quality=${3:-90}
+    local name=${1%.*}
+    local output_name="$name-lg.jpg"
+
+    magick "${1}" -resize "$size^" -gravity center -extent $size^ -quality $quality $output_name
+}
+
+function newsletter-img () {
+    local quality=${2:-70}
+    local name=${1%.*}
+    local output_name="$name-newsletter.webp"
+    local dist_dir="dist"
+
+    mkdir -p $dist_dir
+    convert-webp-1280 "${1}" "$dist_dir/$output_name" $quality
+    echo "created: $dist_dir/$output_name"
+}
+
+function rwimg () {
+    local base_name=$(basename ${1})
+    local quality=${2:-70}
+    local name=${base_name%.*}
+    local sm="$name-sm.webp"
+    local md="$name-md.webp"
+    local lg="$name-lg.webp"
+    local dist_dir="dist"
+
+    mkdir -p $dist_dir
+    convert-webp-854 "${1}" "$dist_dir/$sm" $quality
+    convert-webp-1280 "${1}" "$dist_dir/$md" $quality
+    convert-webp-2560 "${1}" "$dist_dir/$lg" $quality
+
+    echo "sm: $dist_dir/$sm"
+    echo "md: $dist_dir/$md"
+    echo "lg: $dist_dir/$lg"
+}
+
+function rwimages {
+    local dir="${1:-.}"  # Default to current directory if no argument is provided
+    for file in "$dir"/*; do
+        if [[ -f "$file" ]]; then
+            echo "processing $file"
+            rwimg $file
+            echo "--------------------------------"
+        fi
+    done
+}
+
+function rwphoto-l () {
+    local base_name=$(basename ${1})
+    local quality=${2:-85}
+    local name=${base_name%.*}
+    local full="$name.webp"
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+
+    local output_full="$dist_dir/$full"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+
+    echo "creating ${output_full}"
+    magick "${1}" -resize "2160x1440>" -quality $quality "$output_full"
+
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality 95 "$output_thumb"
+}
+
+function rwphoto-p () {
+    local base_name=$(basename ${1})
+    local quality=${2:-85}
+    local name=${base_name%.*}
+    local full="$name.webp"
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+
+    local output_full="$dist_dir/$full"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+
+    echo "creating ${output_full}"
+    magick "${1}" -resize "648x972>" -define :webp:lossless=false -define :webp:image-hint=photo -format webp -quality $quality "$output_full"
+
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality 85 "$output_thumb"
+}
+
+function rwphoto-sq () {
+    local base_name=$(basename ${1})
+    local name=${base_name%.*}
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+
+    local output_full="$dist_dir/$base_name"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+
+    echo "creating ${output_full}"
+    magick "${1}" -resize "600x600" -quality 85 "$output_full"
+
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 500x500^ -gravity center -extent 500x500 -define :webp:lossless=false -define :webp:image-hint=photo -quality 90 "$output_thumb"
+}
+
+function sq-1000 () {
+    local base_name=$(basename ${1})
+    local quality=${2:-85}
+    local name=${base_name%.*}
+    local thumb="$name-thumb.webp"
+    local dist_dir="dist"
+    local output_thumb="$dist_dir/$thumb"
+
+    mkdir -p $dist_dir
+    echo "creating ${output_thumb}"
+    magick "${1}" -resize 1000x1000^ -gravity center -extent 1000x1000 -define :webp:lossless=false -define :webp:image-hint=photo -quality $quality "$output_thumb"
+
+}
+
+function square-thumb () {
+    local name=${1%.jpg}
+    local thumb="$name-thumb.webp"
+
+    magick "${1}" -resize 500x500^ -gravity center -extent 500x500 -define :webp:lossless=false -define :webp:image-hint=photo -quality 85 "$thumb"
+ 
+}

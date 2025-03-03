@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# create a new workspace dir
+function workspace {
+    local dir_suffix=$(slugify "${1}")
+    local date=$(date +"%Y%m%d")
+    local dir_name="${date}-${dir_suffix}"
+    local workspace_dir="${dirworkspaces}/${dir_name}"
+
+    mkdir "$workspace_dir"
+    echo $workspace_dir
+}
