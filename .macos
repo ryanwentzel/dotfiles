@@ -6,7 +6,8 @@
 #
 # Adapted from https://github.com/holman/dotfiles/blob/644d8748d1ecabe59d607b5463c48ef220b67b74/macos/set-defaults.sh
 #
-# Run ./setup.sh and you'll be good to go.
+
+echo "-----> Setting up macos"
 
 # Use AirDrop over every interface. srsly this should be a default.
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
@@ -27,3 +28,5 @@ defaults write com.apple.Safari.plist IncludeDevelopMenu -bool true
 defaults write com.apple.Safari.plist WebKitDeveloperExtrasEnabledPreferenceKey -bool true
 defaults write com.apple.Safari.plist "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+echo "-----> Finished setting up macos"

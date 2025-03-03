@@ -1,4 +1,3 @@
-export DOTFILES="$HOME/dev/dotfiles/"
 export RW_TEMPLATES="$HOME/dev/dotfiles/RW_TEMPLATES/"
 export IA_WRITER_DOCS_DIR="$HOME/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents"
 export RW_NOTES_DIR="$IA_WRITER_DOCS_DIR/notes"

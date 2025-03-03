@@ -8,9 +8,6 @@
 
 set -e
 
-cd "$(dirname "$0")/.."
-DOTFILES_ROOT=$(pwd -P)
-
 function backup () {
   target=$1
   if [ -e "$target" ]; then
@@ -31,9 +28,9 @@ function symlink () {
 }
 
 # For all files, backup the target file located at `~/.$file` and symlink `$file` to `~/.$file`
-for file in "$DOTFILES_ROOT/"{zshrc,gitignore}; do
+for file in {zshrc,gitignore}; do
   if [ -f "$file" ]; then
-    target="$HOME/.$(basename $file)"
+    target="$HOME/.$file"
     # Backup the target file if it exists
     if [ -e "$target" ] && [ -f "$target" ]; then
       backup $target
@@ -42,3 +39,5 @@ for file in "$DOTFILES_ROOT/"{zshrc,gitignore}; do
   fi
 done
 unset file
+
+source ./.macos
