@@ -1,16 +1,11 @@
 #!/bin/sh
 
-local this_dir=$(dirname $0)
-for file in "${this_dir}"/funcs/*; do
+for file in "${DOTFILES}"/funcs/*; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 
 function _id () {
     echo $(date +"%Y%m%d%H%M")
-}
-
-function affinity () {
-    open "${1}" -a /Applications/Affinity\ Photo.app/
 }
 
 function arch-workspace () {
