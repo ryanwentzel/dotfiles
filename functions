@@ -16,7 +16,7 @@ function affinity () {
 function arch-workspace () {
     local workspace_dir="${1}"
     local archive_name=${2:-$(basename $workspace_dir).zip}
-    local archive_dir="${dirworkspaces}/z_archive/"
+    local archive_dir="${RW_WORKSPACES_DIR}/z_archive/"
     local archive_full_path="${archive_dir}/${archive_name}"
     echo "Archiving $workspace_dir to $archive_full_path"
     mkdir -p "$archive_dir"

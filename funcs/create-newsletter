@@ -6,11 +6,11 @@ function newsletter () {
     local workspace_dir=$(workspace "Weary Pilgrim ${title}")
     local sections_dir="${workspace_dir}/sections"
     mkdir -p $sections_dir
-    for file in "$_templates/newsletter/sections/"*; do
+    for file in "$RW_TEMPLATES/newsletter/sections/"*; do
         cp $file $sections_dir
     done
     local filename="${workspace_dir}/draft-01.md"
     echo "Creating $filename"
-    sed -e "s/\$title/${1}/" "$_templates/newsletter/newsletter.md" > $filename
+    sed -e "s/\$title/${1}/" "$RW_TEMPLATES/newsletter/newsletter.md" > $filename
     open "$filename"
 }

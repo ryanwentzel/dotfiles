@@ -6,8 +6,8 @@ function note () {
     local clean=$(slugify "$@")
     local id=$(date +"%Y%m%d%H%M")
     local slug="$id-$clean"
-    local filename="$dirnotes/$slug.md"
+    local filename="$RW_NOTES_DIR/$slug.md"
     echo "Creating $filename"
-    sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $_templates/note.md > $filename
+    sed -e "s/\$id/$id/" -e "s/\$date/$(date +'%B %d, %Y')/" -e "s/\$title/$title/" $RW_TEMPLATES/note.md > $filename
     open "$filename"
 }
