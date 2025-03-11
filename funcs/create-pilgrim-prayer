@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Create a Pilgrim Prayer
+function pp () {
+    local title=${1}
+    local slug="Pilgrim Prayer — ${title}"
+    local filename="${RW_DRAFTS_DIR}/${slug}.md"
+
+    echo "Creating ${filename}"
+    sed -e "s/\$title/$title/" $RW_TEMPLATES/pilgrim-prayer.md > $filename
+}
