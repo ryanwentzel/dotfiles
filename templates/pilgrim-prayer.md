@@ -22,4 +22,6 @@ INSERT TEXT OF PRAYER HERE
 
 ---
 
+Know someone who might enjoy this? Feel free to forward it to them.
+
 *Find more Pilgrim Prayers at [ryanlwentzel.com](https://ryanlwentzel.com/prayers/)*
